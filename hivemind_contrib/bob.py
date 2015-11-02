@@ -31,4 +31,19 @@ def show():
             interface.fixed_ips])
         interfacetable.add_row(["IP Addresses", ip_addresses])
 
+        # reasonable guess
+        tapdev = 'tap'+interface.port_id[:11]
+        interfacetable.add_row(["Tap Name", tapdev])
+
         print interfacetable
+
+    print "Listing Security Groups"
+    secgroups = server.list_security_group()
+
+    for secgroup in secgroups:
+        secgrouptable = PrettyTable(['Security Group ID', 'Name', 'Proto', 'From Port', 'To Port'])
+        for rule in secgroup.rules:
+            secgrouptable.add_row([secgroup.id, secgroup.name,
+                rule['ip_protocol'], rule['from_port'], rule['to_port']])
+
+        print secgrouptable
