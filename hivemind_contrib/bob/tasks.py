@@ -4,6 +4,32 @@ from prettytable import PrettyTable
 
 from hivemind_contrib.nova import client as nova_client
 
+from .server_tests import run as run_server_tests
+
+from pprint import pprint
+
+@task
+def check():
+    """Check if instance is 'healthy'
+    """
+    if not env.instance_uuid:
+        error("No instance_uuid specified.")
+    nc = nova_client()
+    server = nc.servers.get(env.instance_uuid)
+
+    print "Running tests..."
+    testresult = run_server_tests(server)
+    if testresult.failures:
+        pprint(testresult.failures)
+    if testresult.errors:
+        pprint(testresult.errors)
+
+    #testresult.printErrors()
+    print "Tests: %s Failures: %s Errors: %s" % (
+            testresult.testsRun,
+            len(testresult.failures),
+            len(testresult.errors))
+
 @task
 def show():
     """Show information about an instance
@@ -18,6 +44,8 @@ def show():
     table.add_row(["Instance Name", server.name])
     table.add_row(["OS-EXT-SRV-ATTR:host", server._info["OS-EXT-SRV-ATTR:host"]])
     table.add_row(["OS-EXT-SRV-ATTR:instance_name", server._info["OS-EXT-SRV-ATTR:instance_name"]])
+    table.add_row(["OS-EXT-STS:task_state", server._info["OS-EXT-STS:task_state"]])
+    table.add_row(["OS-EXT-STS:vm_state", server._info["OS-EXT-STS:vm_state"]])
     print table
 
     print "Listing Interfaces"
