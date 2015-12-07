@@ -22,6 +22,7 @@ class ServerTestCase(unittest.TestCase):
     # test for instance missing images
     # useful for cases when instances are still running but the image is gone
     # from /var/lib/nova/instances
+    # Note(jake): might not be valid anymore, removing from list of tests
     def test_image_not_found(self):
         if not hasattr(self.server, 'fault'):
             return True
@@ -38,7 +39,6 @@ def run(server):
     suite = unittest.TestSuite()
     suite.addTest(ServerTestCase('test_server_status_active', server))
     suite.addTest(ServerTestCase('test_port_state_active', server))
-    suite.addTest(ServerTestCase('test_image_not_found', server))
     suite.addTest(ServerTestCase('test_server_console_log', server))
 
     # make unittest run quietly
