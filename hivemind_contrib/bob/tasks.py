@@ -17,7 +17,7 @@ def check():
     nc = nova_client()
     server = nc.servers.get(env.instance_uuid)
 
-    print "Running tests..."
+    print "Running tests for instance %s" % (server.id)
     testresult = run_server_tests(server)
     if testresult.failures:
         pprint(testresult.failures)
@@ -25,10 +25,11 @@ def check():
         pprint(testresult.errors)
 
     #testresult.printErrors()
-    print "Tests: %s Failures: %s Errors: %s" % (
+    print "Tests: %s Errors: %s Failures: %s Skipped: %s" % (
             testresult.testsRun,
+            len(testresult.errors),
             len(testresult.failures),
-            len(testresult.errors))
+            len(testresult.skipped))
 
 @task
 def show():

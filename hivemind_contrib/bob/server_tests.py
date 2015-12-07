@@ -20,16 +20,20 @@ class ServerTestCase(unittest.TestCase):
     def test_image_not_found(self):
         if not hasattr(self.server, 'fault'):
             return True
-
         msg = self.server.fault['message']
         m = re.match(r"^Image (.)+ could not be found.$", msg)
         self.assertIsNone(m, msg="Image not found")
-        
+
+    def test_server_console_log(self):
+        self.assertNotEqual(len(self.server.get_console_output()), 0,
+                msg="Console log has no output")
+
 def run(server):
     suite = unittest.TestSuite()
     suite.addTest(ServerTestCase('test_server_status_active', server))
     suite.addTest(ServerTestCase('test_port_state_active', server))
     suite.addTest(ServerTestCase('test_image_not_found', server))
+    suite.addTest(ServerTestCase('test_server_console_log', server))
 
     # make unittest run quietly
     stream = open(os.devnull, 'w')
