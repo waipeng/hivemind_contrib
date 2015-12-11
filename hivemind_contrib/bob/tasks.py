@@ -19,12 +19,7 @@ def check():
 
     print "Running tests for instance %s" % (server.id)
     testresult = run_server_tests(server)
-    if testresult.failures:
-        pprint(testresult.failures)
-    if testresult.errors:
-        pprint(testresult.errors)
 
-    #testresult.printErrors()
     print "Tests: %s Errors: %s Failures: %s Skipped: %s" % (
             testresult.testsRun,
             len(testresult.errors),

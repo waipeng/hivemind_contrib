@@ -58,8 +58,5 @@ def run(server):
     suite.addTest(ServerTestCase('test_server_get_novnc_url', server))
     suite.addTest(ServerTestCase('test_server_novnc', server))
 
-    # make unittest run quietly
-    stream = open(os.devnull, 'w')
-
-    testresult = unittest.TextTestRunner(stream=stream, verbosity=0).run(suite)
+    testresult = unittest.TextTestRunner(verbosity=0).run(suite)
     return testresult
