@@ -49,6 +49,16 @@ class ServerTestCase(unittest.TestCase):
         self.assertEqual(r.status_code, 200,
                 msg="novnc url response status code not 200")
 
+    # test if more than one security rules
+    def test_security_group_rules(self):
+        sgs = self.server.list_security_group()
+        rules = []
+        for sg in sgs:
+            rules.extend(sg.rules)
+
+        self.assertGreater(len(rules), 0,
+            msg="Zero security group rules detected")
+
 
 def run(server):
     suite = unittest.TestSuite()
@@ -57,6 +67,7 @@ def run(server):
     suite.addTest(ServerTestCase('test_server_console_log', server))
     suite.addTest(ServerTestCase('test_server_get_novnc_url', server))
     suite.addTest(ServerTestCase('test_server_novnc', server))
+    suite.addTest(ServerTestCase('test_security_group_rules', server))
 
     testresult = unittest.TextTestRunner(verbosity=0).run(suite)
     return testresult
